@@ -1,0 +1,1 @@
+{"dependencies":[["vagrant-ca-certificates",["= 1.3.0"]],["log4r",[">= 0"]],["concurrent-ruby",["~> 1.0"]],["i18n",[">= 0"]],["micromachine",[">= 2","< 4"]],["vagrant-vbguest",["= 0.32.0"]]],"checksum":"60bd21ffb2e3a8ac6cc79d3c80fb352e4519849364c294614198835ffd256841","vagrant_version":"2.4.3"}

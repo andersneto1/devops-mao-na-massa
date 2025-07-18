@@ -1,0 +1,8 @@
+- name: Upgrade de todos os pacotes do SO
+  dnf:
+    name: '*'
+    state: latest
+- name: Instalacao do git client
+  dnf:
+    name: git
+    state: latest
