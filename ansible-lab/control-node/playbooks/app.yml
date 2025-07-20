@@ -9,7 +9,8 @@
     dbhost: "db01"
     dbname: "notes"
     dbusername: "notesapp"
-    dbpassword: "devopsmaonamassa"
+    dbpassword: "senha123"
+    notes_path: "/opt/notes"
   tasks:
     - name: Adicionar usuario de app
       user:
@@ -26,7 +27,7 @@
         state: latest
     - name: Criação do diretório de app
       file:
-        path: /opt/notes
+        path: "{{ notes_path }}"
         state: directory
         owner: app
         group: app
@@ -37,21 +38,23 @@
     - name: Clone do repositório Notes - app
       git:
         repo: 'https://github.com/callicoder/spring-boot-mysql-rest-api-tutorial.git'
-        dest: /opt/notes
+        dest: "{{ notes_path }}"
         clone: yes
         force: yes
       become_user: app
     - name: Configurar arquivo de propriedades para camada de banco de dados
       template:
         src: application.properties
-        dest: /opt/notes/src/main/resources/application.properties
+        dest: "{{ notes_path }}/src/main/resources/application.properties"
     - name: Gerar pacote da aplicação
-      command: mvn -f /opt/notes/pom.xml package
+      shell: mvn clean package -DskipTests
+      args:
+        chdir: "{{ notes_path }}"
       become_user: app
     - name: Registrar versao atual do pacote
       shell:
         cmd: mvn org.apache.maven.plugins:maven-help-plugin:2.1.1:evaluate -Dexpression=project.version | grep -v '\['
-        chdir: /opt/notes/
+        chdir: "{{ notes_path }}"
       register: app_version
     - name: Configurar serviço do Systemd
       template:
@@ -62,6 +65,7 @@
       service:
         name: notes
         state: restarted
+        enabled: yes
   roles:
       - configuracao-default-so
   handlers:
